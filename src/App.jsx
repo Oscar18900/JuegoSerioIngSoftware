@@ -1,25 +1,39 @@
 import React, { useEffect, useRef } from 'react';
 
 function App() {
-  // 1. Creamos una referencia para controlar el audio directamente
+  // 1. Creamos una referencia para controlar el audio de fondo
   const audioRef = useRef(null);
 
-  // 2. Usamos useEffect para que el código se ejecute en cuanto cargue la pantalla
+  // --- NUEVAS FUNCIONES DE SONIDO ---
+  const playHoverSound = () => {
+    const hover = new Audio('/sonido1.mp3');
+    hover.volume = 0.4; // Ajusta el volumen a tu gusto (0.0 a 1.0)
+    hover.play().catch(e => console.log("Audio hover esperando interacción", e));
+  };
+
+  const playClickSound = () => {
+    const click = new Audio('/sonido2.mp3');
+    click.volume = 0.6;
+    click.play().catch(e => console.log("Audio click esperando interacción", e));
+  };
+
+  // 2. Usamos useEffect para la música de fondo
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = 0.1; // Le bajamos el volumen al 10% para que sea de fondo y no sature
+      audioRef.current.volume = 0.1; // Le bajamos el volumen al 10%
       
-      // Intentamos reproducir el audio. Si el navegador lo bloquea (por la regla de autoplay), 
-      // atrapamos el error silenciosamente en lugar de que truene la consola.
       audioRef.current.play().catch(error => {
         console.log("El navegador pausó el audio. Esperando a que el usuario haga clic en la pantalla.");
       });
     }
   }, []);
+
   return (
     <div className="max-w-5xl w-full px-4 py-12 flex flex-col items-center">
-      {/* 3. Etiqueta de audio nativa, invisible, apuntando a tu MP3 y con la propiedad 'loop' */}
+      
+      {/* Etiqueta de audio nativa para la música de fondo en loop */}
       <audio ref={audioRef} src="/musica-fondo.mp3" loop />
+
       {/* SECCIÓN DEL TÍTULO: Estilo Menú de Juego */}
       <header className="text-center mb-16 animate-fade-in">
         <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] uppercase italic">
@@ -37,7 +51,7 @@ function App() {
         </p>
       </header>
 
-{/* ZONA DE METTO (Sin el contenedor padre) */}
+      {/* ZONA DE METTO */}
       <div className="w-full max-w-2xl flex flex-col md:flex-row items-center gap-6 mb-12">
         
         {/* Avatar */}
@@ -48,16 +62,14 @@ function App() {
         
         {/* Burbuja de diálogo */}
         <div className="flex-1 relative">
-          {/* El triángulo que apunta a Metto */}
           <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-0 h-0 border-y-8 border-y-transparent border-r-8 border-r-slate-900/70 hidden md:block"></div>
-          
           <p className="bg-slate-900/70 backdrop-blur-sm p-4 rounded-lg text-slate-200 italic text-sm md:text-base shadow-inner border border-white/10">
             "¡Saludos, humano! Soy Metto, tu asistente. Analizaré tus decisiones para asegurar que el flujo sea óptimo. ¿Estás listo para compilar tu futuro?"
           </p>
         </div>
       </div>
 
-      {/* BLOQUES DE INFORMACIÓN: Sin tarjeta, estilo "Lore" o Instrucciones */}
+      {/* BLOQUES DE INFORMACIÓN */}
       <div className="grid md:grid-grid-cols-2 gap-12 max-w-4xl w-full mb-16">
         <div className="border-l-4 border-cyan-500 pl-6">
           <h3 className="text-white font-black text-xl mb-3 uppercase tracking-wider">Misión</h3>
@@ -80,8 +92,14 @@ function App() {
       </div>
 
       {/* ACCIÓN PRINCIPAL */}
-      <button onClick={() => audioRef.current?.play()} className="group relative px-12 py-4 bg-white text-black font-black text-2xl uppercase tracking-tighter rounded-sm hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-        
+      <button 
+        onMouseEnter={playHoverSound} 
+        onClick={() => {
+          audioRef.current?.play(); // Asegura que la música de fondo arranque si estaba bloqueada
+          playClickSound();         // Dispara el sonido del clic
+        }} 
+        className="group relative px-12 py-4 bg-white text-black font-black text-2xl uppercase tracking-tighter rounded-sm hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+      >
         <span className="relative z-10">Iniciar Simulación</span>
         <div className="absolute inset-0 bg-cyan-500 blur-xl opacity-0 group-hover:opacity-50 transition-opacity"></div>
       </button>
