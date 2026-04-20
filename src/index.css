@@ -1,17 +1,25 @@
 @import "tailwindcss";
 
-body {
-  /* Mantenemos las utilidades de Tailwind para centrar la tarjeta */
-  @apply text-slate-200 antialiased min-h-screen flex items-center justify-center p-4;
-  
-  /* --- MAGIA DEL FONDO ANIMADO --- */
-  /* 1. Creamos un degradado radial con colores de temática "consola/código" */
-  background: radial-gradient(circle, #ff7663 0%, #3d39ff 85%);
-  
-  /* 2. Hacemos el fondo mucho más grande que la pantalla para poder moverlo */
-  background-size: 200% 200%;
-  
-
+* {
+  box-sizing: border-box;
 }
 
-/* 4. Aquí definimos cómo se mueve el fondo de un lado a otro creando el efecto de que cambia */
+html {
+  /* Escala la fuente base según el ancho de pantalla */
+  font-size: clamp(12px, 2.5vw, 16px);
+}
+
+body {
+  @apply text-slate-200 antialiased min-h-screen flex items-center justify-center p-4;
+  background: radial-gradient(circle, #ff7663 0%, #3d39ff 85%);
+  background-size: 200% 200%;
+
+  /* Evita scroll horizontal */
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Evita que cualquier elemento se salga del viewport */
+img, video, audio {
+  max-width: 100%;
+}
