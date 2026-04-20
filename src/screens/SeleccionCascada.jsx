@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const proyectos = [
   {
@@ -36,11 +36,48 @@ const proyectos = [
   },
 ];
 
+// Lee el high score de un proyecto desde localStorage
+function getHighScore(proyectoId) {
+  try {
+    const val = localStorage.getItem(`hs_${proyectoId}`);
+    return val ? parseInt(val) : null;
+  } catch {
+    return null;
+  }
+}
+
+// Exportada para que la llames desde CascadaP1/P2/P3 al terminar el juego
+export function saveHighScore(proyectoId, puntos) {
+  try {
+    const actual = getHighScore(proyectoId);
+    if (actual === null || puntos > actual) {
+      localStorage.setItem(`hs_${proyectoId}`, puntos.toString());
+    }
+  } catch {}
+}
+
+// Rango según puntuación
+function getRango(puntos) {
+  if (puntos >= 800) return { label: 'ORO',    color: 'text-yellow-400', symbol: '🥇' };
+  if (puntos >= 400) return { label: 'PLATA',  color: 'text-slate-300',  symbol: '🥈' };
+  return                     { label: 'BRONCE', color: 'text-orange-400', symbol: '🥉' };
+}
+
 export default function SeleccionCascada({ goToScreen, mainAudioRef, playClickSound, playHoverSound }) {
   const cascadaAudioRef = useRef(null);
+  const [highScores, setHighScores] = useState({});
 
+  // Leer high scores al montar
   useEffect(() => {
-    // Fade out música principal
+    const scores = {};
+    proyectos.forEach(p => {
+      scores[p.id] = getHighScore(p.id);
+    });
+    setHighScores(scores);
+  }, []);
+
+  // Audio fade in/out
+  useEffect(() => {
     const main = mainAudioRef?.current;
     if (main) {
       const fadeOut = setInterval(() => {
@@ -54,7 +91,6 @@ export default function SeleccionCascada({ goToScreen, mainAudioRef, playClickSo
       }, 80);
     }
 
-    // Arrancar música de cascada
     if (cascadaAudioRef.current) {
       cascadaAudioRef.current.volume = 0;
       cascadaAudioRef.current.play().catch(() => {});
@@ -67,7 +103,6 @@ export default function SeleccionCascada({ goToScreen, mainAudioRef, playClickSo
       }, 80);
     }
 
-    // Al salir: restaurar música principal
     return () => {
       if (cascadaAudioRef.current) {
         cascadaAudioRef.current.pause();
@@ -117,7 +152,6 @@ export default function SeleccionCascada({ goToScreen, mainAudioRef, playClickSo
           completarse antes de avanzar. <span className="text-red-400 font-bold">No hay curas</span>. Los errores
           tempranos duelen más.
         </p>
-        {/* Fases visuales */}
         <div className="flex items-center gap-1 mt-4 flex-wrap">
           {['Análisis', 'Diseño', 'Implementación', 'Pruebas'].map((fase, i, arr) => (
             <React.Fragment key={fase}>
@@ -132,44 +166,65 @@ export default function SeleccionCascada({ goToScreen, mainAudioRef, playClickSo
 
       {/* Proyectos */}
       <div className="w-full flex flex-col gap-4 mb-10">
-        {proyectos.map((p, i) => (
-          <button
-            key={p.id}
-            onMouseEnter={playHoverSound}
-            onClick={() => {
-              playClickSound();
-              goToScreen(p.id);
-            }}
-            className={`group w-full text-left border-2 ${p.color} ${p.bg} rounded-lg px-5 py-4 transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]`}
-            style={{ animationDelay: `${i * 0.08}s` }}
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex items-start gap-4">
-                {/* Número */}
-                <span className={`font-black text-3xl leading-none ${p.tagColor} opacity-40 mt-1`}>
-                  {p.numero}
-                </span>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-xs font-black uppercase tracking-widest border px-2 py-0.5 rounded ${p.badge}`}>
-                      {p.dificultad}
-                    </span>
+        {proyectos.map((p, i) => {
+          const hs = highScores[p.id];
+          const jugado = hs !== null && hs !== undefined;
+          const rango = jugado ? getRango(hs) : null;
+
+          return (
+            <button
+              key={p.id}
+              onMouseEnter={playHoverSound}
+              onClick={() => {
+                playClickSound();
+                goToScreen(p.id);
+              }}
+              className={`group w-full text-left border-2 ${p.color} ${p.bg} rounded-lg px-5 py-4 transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]`}
+              style={{ animationDelay: `${i * 0.08}s` }}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-4">
+                  <span className={`font-black text-3xl leading-none ${p.tagColor} opacity-40 mt-1`}>
+                    {p.numero}
+                  </span>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className={`text-xs font-black uppercase tracking-widest border px-2 py-0.5 rounded ${p.badge}`}>
+                        {p.dificultad}
+                      </span>
+                      {jugado && (
+                        <span className="text-xs font-black uppercase tracking-widest border px-2 py-0.5 rounded bg-white/5 border-white/20 text-slate-400">
+                          ✓ Jugado
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-white font-black text-base md:text-lg uppercase tracking-tight">
+                      {p.nombre}
+                    </p>
+                    <p className="text-slate-400 text-xs md:text-sm mt-1 leading-relaxed">
+                      {p.desc}
+                    </p>
+                    {/* High score row */}
+                    {jugado && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="text-sm">{rango.symbol}</span>
+                        <span className={`text-xs font-black uppercase tracking-widest ${rango.color}`}>
+                          {rango.label}
+                        </span>
+                        <span className="text-slate-600 text-xs">·</span>
+                        <span className="text-slate-400 text-xs">Mejor:</span>
+                        <span className="text-white font-black text-xs">{hs.toLocaleString()} pts</span>
+                      </div>
+                    )}
                   </div>
-                  <p className="text-white font-black text-base md:text-lg uppercase tracking-tight">
-                    {p.nombre}
-                  </p>
-                  <p className="text-slate-400 text-xs md:text-sm mt-1 leading-relaxed">
-                    {p.desc}
-                  </p>
                 </div>
+                <span className={`${p.tagColor} text-xl mt-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200`}>
+                  →
+                </span>
               </div>
-              {/* Flecha */}
-              <span className={`${p.tagColor} text-xl mt-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200`}>
-                →
-              </span>
-            </div>
-          </button>
-        ))}
+            </button>
+          );
+        })}
       </div>
 
       {/* Volver */}
