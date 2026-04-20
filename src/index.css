@@ -45,18 +45,23 @@ img, video, audio {
     transform: scale(0.3) translate(-50%, -50%);
     opacity: 0;
   }
-  50% {
+  40% {
     transform: scale(1.05) translate(-50%, -50%);
     opacity: 1;
   }
-  70% {
-    transform: scale(0.9) translate(-50%, -50%);
+  60% {
+    transform: scale(1) translate(-50%, -50%);
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
   }
   100% {
     transform: scale(1) translate(-50%, -50%);
+    opacity: 0;
   }
 }
 
 .animate-bounce-in-center {
-  animation: bounce-in-center 0.6s ease-out both;
+  animation: bounce-in-center 1.2s ease-out forwards;
 }

@@ -354,11 +354,7 @@ export default function CascadaP1({ goToScreen, playHoverSound }) {
   return (
     <div className="max-w-2xl w-full px-4 py-6 flex flex-col items-center animate-fade-in relative">
 
-      {/* Flash de pantalla */}
-      {screenFlash && (
-        <div className={`fixed inset-0 pointer-events-none z-30 animate-screen-flash
-          ${screenFlash === 'correct' ? 'bg-green-500' : 'bg-red-600'}`} />
-      )}
+
 
       {/* Popup central con bounce */}
       {centerPopup && (
