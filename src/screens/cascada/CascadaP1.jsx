@@ -462,7 +462,7 @@ useEffect(() => {
           <span className="text-sm font-black text-white">{score.toLocaleString()} pts</span>
         </div>
       </div>
-
+          <div key={preguntaIdx} className="w-full animate-fade-in flex flex-col items-center">
       {/* Pregunta */}
       <div className={`relative w-full border-l-4 ${faseActual.borderColor} pl-5 pr-4 py-5 bg-slate-900/60 rounded-r-lg mb-5`}>
         <p className="text-white font-bold text-xl md:text-2xl leading-relaxed">
@@ -471,7 +471,6 @@ useEffect(() => {
       </div>
 
       {/* Opciones */}
-      <div className="w-full flex flex-col gap-3 mb-5">
         {preguntaActual.opciones.map((op, i) => {
           let estilo = 'border-white/20 text-slate-200 hover:border-white/50';
           if (respondido) {
