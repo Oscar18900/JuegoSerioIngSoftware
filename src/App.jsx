@@ -6,6 +6,7 @@ import SeleccionKanban from './screens/SeleccionKanban';
 import CascadaP1 from './screens/cascada/CascadaP1';
 import CascadaP2 from './screens/cascada/CascadaP2';
 import CascadaP3 from './screens/cascada/CascadaP3';
+import ScrumP1 from './screens/scrum/ScrumP1';
 import GameOver  from './screens/GameOver';
 
 function App() {
@@ -250,6 +251,14 @@ const goToScreen = (screenName, data = {}) => {
     goToScreen={goToScreen} 
     playHoverSound={playHoverSound} 
     mainAudioRef={audioRef} // <-- AÑADE ESTA LÍNEA
+  />
+)}
+
+{currentScreen === 'scrumP1' && (
+  <ScrumP1
+    goToScreen={goToScreen}
+    playHoverSound={playHoverSound}
+    mainAudioRef={audioRef}
   />
 )}
 
