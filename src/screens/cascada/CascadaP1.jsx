@@ -177,13 +177,24 @@ useEffect(() => {
   const playTemporizador = () => { try { const a = new Audio('/temporizador.mp3'); a.volume = 0.5; a.play(); } catch {} };
 
   // ── Countdown ──
+// ── Countdown ──
   useEffect(() => {
     if (etapa !== 'countdown') return;
-    if (countdown > 0) {
+    
+    // Solo dispara el audio una vez al inicio
+    if (countdown === 3) {
       playTemporizador();
+    }
+
+    if (countdown > 0) {
+      // Resta 1 cada segundo mientras sea mayor a 0
       const t = setTimeout(() => setCountdown(c => c - 1), 1000);
       return () => clearTimeout(t);
-    } else { setEtapa('pregunta'); }
+    } else if (countdown === 0) { 
+      // Cuando llega a 0, espera 0.5s para que se lea "¡COMIENZA!" antes de avanzar
+      const t = setTimeout(() => setEtapa('pregunta'), 500);
+      return () => clearTimeout(t);
+    }
   }, [etapa, countdown]);
 
   // ── Timer pregunta ──
