@@ -109,7 +109,7 @@ function getRango(score) {
   return                   { label: 'BRONCE', color: 'text-orange-400', symbol: '🥉', desc: 'De milagro no te corrieron.' };
 }
 
-export default function CascadaP1({ goToScreen, playHoverSound }) {
+export default function CascadaP1({ goToScreen, playHoverSound, mainAudioRef }) {
   const [etapa, setEtapa] = useState('countdown');
   const [countdown, setCountdown] = useState(3);
   const [faseIdx, setFaseIdx] = useState(0);
@@ -134,17 +134,42 @@ export default function CascadaP1({ goToScreen, playHoverSound }) {
   const preguntaActual = faseActual?.preguntas[preguntaIdx];
 
   // ── Música fondocascada ──
-  useEffect(() => {
+useEffect(() => {
+    // 1. Apagar forzosamente la música principal del menú
+    const main = mainAudioRef?.current;
+    if (main) {
+      main.pause();
+      main.volume = 0;
+    }
+
     const audio = new Audio('/fondocascada.mp3');
     audio.loop = true;
     audio.volume = 0;
     audio.play().catch(() => {});
+
     const iv = setInterval(() => {
+      // Mantenemos a raya la música principal por si la transición intentó subirle el volumen
+      if (main) main.volume = 0; 
+
       if (audio.volume < 0.09) audio.volume = Math.min(0.1, audio.volume + 0.01);
       else clearInterval(iv);
     }, 80);
-    return () => { clearInterval(iv); audio.pause(); audio.currentTime = 0; };
-  }, []);
+
+    return () => { 
+      clearInterval(iv); 
+      audio.pause(); 
+      audio.currentTime = 0; 
+      
+      // 2. Reactivar la música principal gradualmente al salir (volver al menú)
+      if (main) {
+        main.play().catch(() => {});
+        const fadeInMain = setInterval(() => {
+          if (main.volume < 0.09) main.volume = Math.min(0.1, main.volume + 0.01);
+          else clearInterval(fadeInMain);
+        }, 80);
+      }
+    };
+  }, [mainAudioRef]); // <-- Añade mainAudioRef a las dependencias
 
   // ── Sonidos ──
   const playCorrecta   = () => { try { const a = new Audio('/correcta.mp3');    a.volume = 0.6; a.play(); } catch {} };
@@ -200,7 +225,7 @@ export default function CascadaP1({ goToScreen, playHoverSound }) {
       setCombo(0);
       playIncorrecta();
 
-      const popupText = tiempoAgotado ? '⏱ TIEMPO' : '✗ INCORRECTO';
+      const popupText = tiempoAgotado ? '⏱ TIEMPO' : 'INCORRECTO';
       setCenterPopup({ lines: [popupText], correcto: false, key: Date.now() });
       setScreenFlash('incorrect');
       setShakeHUD(true);

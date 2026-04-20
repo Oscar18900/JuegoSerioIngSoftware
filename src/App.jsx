@@ -230,7 +230,11 @@ const goToScreen = (screenName, data = {}) => {
 )}
 
 {currentScreen === 'cascadaP1' && (
-  <CascadaP1 goToScreen={goToScreen} playHoverSound={playHoverSound} />
+  <CascadaP1 
+    goToScreen={goToScreen} 
+    playHoverSound={playHoverSound} 
+    mainAudioRef={audioRef} // <-- AÑADE ESTA LÍNEA
+  />
 )}
 
 {currentScreen === 'gameover' && (
