@@ -4,6 +4,8 @@ import SeleccionCascada from './screens/SeleccionCascada.jsx';
 import SeleccionScrum from './screens/SeleccionScrum';
 import SeleccionKanban from './screens/SeleccionKanban';
 import CascadaP1 from './screens/cascada/CascadaP1';
+import CascadaP2 from './screens/cascada/CascadaP2';
+import CascadaP3 from './screens/cascada/CascadaP3';
 import GameOver  from './screens/GameOver';
 
 function App() {
@@ -231,6 +233,20 @@ const goToScreen = (screenName, data = {}) => {
 
 {currentScreen === 'cascadaP1' && (
   <CascadaP1 
+    goToScreen={goToScreen} 
+    playHoverSound={playHoverSound} 
+    mainAudioRef={audioRef} // <-- AÑADE ESTA LÍNEA
+  />
+)}
+{currentScreen === 'cascadaP2' && (
+  <CascadaP2 
+    goToScreen={goToScreen} 
+    playHoverSound={playHoverSound} 
+    mainAudioRef={audioRef} // <-- AÑADE ESTA LÍNEA
+  />
+)}
+{currentScreen === 'cascadaP3' && (
+  <CascadaP3 
     goToScreen={goToScreen} 
     playHoverSound={playHoverSound} 
     mainAudioRef={audioRef} // <-- AÑADE ESTA LÍNEA
