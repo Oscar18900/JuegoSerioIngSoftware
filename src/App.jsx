@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 function App() {
+  // 1. Creamos una referencia para controlar el audio directamente
+  const audioRef = useRef(null);
+
+  // 2. Usamos useEffect para que el código se ejecute en cuanto cargue la pantalla
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.1; // Le bajamos el volumen al 10% para que sea de fondo y no sature
+      
+      // Intentamos reproducir el audio. Si el navegador lo bloquea (por la regla de autoplay), 
+      // atrapamos el error silenciosamente en lugar de que truene la consola.
+      audioRef.current.play().catch(error => {
+        console.log("El navegador pausó el audio. Esperando a que el usuario haga clic en la pantalla.");
+      });
+    }
+  }, []);
   return (
     <div className="max-w-5xl w-full px-4 py-12 flex flex-col items-center">
-      
+      {/* 3. Etiqueta de audio nativa, invisible, apuntando a tu MP3 y con la propiedad 'loop' */}
+      <audio ref={audioRef} src="/musica-fondo.mp3" loop />
       {/* SECCIÓN DEL TÍTULO: Estilo Menú de Juego */}
       <header className="text-center mb-16 animate-fade-in">
         <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] uppercase italic">
@@ -64,7 +80,8 @@ function App() {
       </div>
 
       {/* ACCIÓN PRINCIPAL */}
-      <button className="group relative px-12 py-4 bg-white text-black font-black text-2xl uppercase tracking-tighter rounded-sm hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+      <button onClick={() => audioRef.current?.play()} className="group relative px-12 py-4 bg-white text-black font-black text-2xl uppercase tracking-tighter rounded-sm hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+        
         <span className="relative z-10">Iniciar Simulación</span>
         <div className="absolute inset-0 bg-cyan-500 blur-xl opacity-0 group-hover:opacity-50 transition-opacity"></div>
       </button>
