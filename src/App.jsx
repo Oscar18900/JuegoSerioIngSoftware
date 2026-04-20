@@ -7,6 +7,8 @@ import CascadaP1 from './screens/cascada/CascadaP1';
 import CascadaP2 from './screens/cascada/CascadaP2';
 import CascadaP3 from './screens/cascada/CascadaP3';
 import ScrumP1 from './screens/scrum/ScrumP1';
+import ScrumP2 from './screens/scrum/ScrumP2';
+import ScrumP3 from './screens/scrum/ScrumP3';
 import GameOver  from './screens/GameOver';
 
 function App() {
@@ -256,6 +258,20 @@ const goToScreen = (screenName, data = {}) => {
 
 {currentScreen === 'scrumP1' && (
   <ScrumP1
+    goToScreen={goToScreen}
+    playHoverSound={playHoverSound}
+    mainAudioRef={audioRef}
+  />
+)}
+{currentScreen === 'scrumP2' && (
+  <ScrumP2
+    goToScreen={goToScreen}
+    playHoverSound={playHoverSound}
+    mainAudioRef={audioRef}
+  />
+)}
+{currentScreen === 'scrumP3' && (
+  <ScrumP3
     goToScreen={goToScreen}
     playHoverSound={playHoverSound}
     mainAudioRef={audioRef}
