@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import ManualEmpleado from './screens/ManualEmpleado.jsx';
 import SeleccionCascada from './screens/SeleccionCascada.jsx';
 import SeleccionScrum from './screens/SeleccionScrum';
+import SeleccionKanban from './screens/SeleccionKanban';
 
 function App() {
   const audioRef = useRef(null);
@@ -207,6 +208,15 @@ function App() {
 
 {currentScreen === 'scrum' && (
   <SeleccionScrum
+    goToScreen={goToScreen}
+    mainAudioRef={audioRef}
+    playClickSound={playClickSound}
+    playHoverSound={playHoverSound}
+  />
+)}
+
+{currentScreen === 'kanban' && (
+  <SeleccionKanban
     goToScreen={goToScreen}
     mainAudioRef={audioRef}
     playClickSound={playClickSound}
