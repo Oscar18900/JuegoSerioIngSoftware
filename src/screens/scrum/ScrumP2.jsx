@@ -373,7 +373,7 @@ export default function ScrumP2({ goToScreen, playHoverSound, mainAudioRef }) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">
         <p className="text-slate-400 text-xs uppercase tracking-widest mb-6">
-          Proyecto 1 — {NOMBRE_PROYECTO}
+          Proyecto 2 — {NOMBRE_PROYECTO}
         </p>
         {countdown > 0 ? (
           <div key={countdown} className="text-9xl font-black text-white animate-ping-once drop-shadow-[0_0_40px_rgba(255,255,255,0.5)]">

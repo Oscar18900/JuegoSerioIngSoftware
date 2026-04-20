@@ -10,6 +10,10 @@ import ScrumP1 from './screens/scrum/ScrumP1';
 import ScrumP2 from './screens/scrum/ScrumP2';
 import ScrumP3 from './screens/scrum/ScrumP3';
 import GameOver  from './screens/GameOver';
+import KanbanP1 from './screens/kanban/KanbanP1';
+import KanbanP2 from './screens/kanban/KanbanP2';
+import KanbanP3 from './screens/kanban/KanbanP3';
+
 
 function App() {
   const audioRef = useRef(null);
@@ -272,6 +276,28 @@ const goToScreen = (screenName, data = {}) => {
 )}
 {currentScreen === 'scrumP3' && (
   <ScrumP3
+    goToScreen={goToScreen}
+    playHoverSound={playHoverSound}
+    mainAudioRef={audioRef}
+  />
+)}
+
+{currentScreen === 'kanbanP1' && (
+  <KanbanP1
+    goToScreen={goToScreen}
+    playHoverSound={playHoverSound}
+    mainAudioRef={audioRef}
+  />
+)}
+{currentScreen === 'kanbanP2' && (
+  <KanbanP2
+    goToScreen={goToScreen}
+    playHoverSound={playHoverSound}
+    mainAudioRef={audioRef}
+  />
+)}
+{currentScreen === 'kanbanP3' && (
+  <KanbanP3
     goToScreen={goToScreen}
     playHoverSound={playHoverSound}
     mainAudioRef={audioRef}
