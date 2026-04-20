@@ -3,6 +3,8 @@ import ManualEmpleado from './screens/ManualEmpleado.jsx';
 import SeleccionCascada from './screens/SeleccionCascada.jsx';
 import SeleccionScrum from './screens/SeleccionScrum';
 import SeleccionKanban from './screens/SeleccionKanban';
+import CascadaP1 from './screens/cascada/CascadaP1';
+import GameOver  from './screens/GameOver';
 
 function App() {
   const audioRef = useRef(null);
@@ -31,15 +33,18 @@ function App() {
   }, []);
 
   // Función de transición: fade negro -> cambia pantalla -> fade out
-  const goToScreen = (screenName) => {
-    playClickSound();
-    audioRef.current?.play();
-    setTransitioning(true);
-    setTimeout(() => {
-      setCurrentScreen(screenName);
-      setTransitioning(false);
-    }, 700); // duración del fade
-  };
+const [screenData, setScreenData] = useState({});
+
+const goToScreen = (screenName, data = {}) => {
+  playClickSound();
+  audioRef.current?.play();
+  setScreenData(data);
+  setTransitioning(true);
+  setTimeout(() => {
+    setCurrentScreen(screenName);
+    setTransitioning(false);
+  }, 700);
+};
 
   return (
     <div className="relative min-h-screen flex items-center justify-center">
@@ -221,6 +226,19 @@ function App() {
     mainAudioRef={audioRef}
     playClickSound={playClickSound}
     playHoverSound={playHoverSound}
+  />
+)}
+
+{currentScreen === 'cascadaP1' && (
+  <CascadaP1 goToScreen={goToScreen} playHoverSound={playHoverSound} />
+)}
+
+{currentScreen === 'gameover' && (
+  <GameOver
+    goToScreen={goToScreen}
+    playHoverSound={playHoverSound}
+    score={screenData.score ?? 0}
+    proyectoOrigen={screenData.proyectoOrigen ?? 'cascadaP1'}
   />
 )}
 

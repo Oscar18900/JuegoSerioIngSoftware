@@ -23,3 +23,19 @@ body {
 img, video, audio {
   max-width: 100%;
 }
+
+@keyframes floatUp {
+  0%   { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-40px); }
+}
+.animate-float-up {
+  animation: floatUp 1.2s ease-out forwards;
+}
+@keyframes pingOnce {
+  0%   { transform: scale(1);   opacity: 1; }
+  50%  { transform: scale(1.4); opacity: 0.7; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+.animate-ping-once {
+  animation: pingOnce 0.4s ease-out;
+}
