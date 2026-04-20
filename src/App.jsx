@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ManualEmpleado from './screens/ManualEmpleado.jsx';
 import SeleccionCascada from './screens/SeleccionCascada.jsx';
+import SeleccionScrum from './screens/SeleccionScrum';
 
 function App() {
   const audioRef = useRef(null);
@@ -197,6 +198,15 @@ function App() {
 
 {currentScreen === 'cascada' && (
   <SeleccionCascada
+    goToScreen={goToScreen}
+    mainAudioRef={audioRef}
+    playClickSound={playClickSound}
+    playHoverSound={playHoverSound}
+  />
+)}
+
+{currentScreen === 'scrum' && (
+  <SeleccionScrum
     goToScreen={goToScreen}
     mainAudioRef={audioRef}
     playClickSound={playClickSound}
