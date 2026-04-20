@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ManualEmpleado from './screens/ManualEmpleado.jsx';
+import SeleccionCascada from './screens/SeleccionCascada.jsx';
 
 function App() {
   const audioRef = useRef(null);
@@ -147,41 +148,41 @@ function App() {
             </div>
           </div>
 
-          {/* Botones de modo */}
-          <div className="flex flex-col gap-4 w-full max-w-md mb-8">
-        {[
-            { label: 'Modo Cascada', bg: 'bg-blue-500',   border: 'border-blue-400', screen: 'cascada' },
-            { label: 'Modo Scrum',   bg: 'bg-green-500',  border: 'border-green-400', screen: 'scrum' },
-            { label: 'Modo Kanban',  bg: 'bg-purple-500', border: 'border-purple-400', screen: 'kanban' },
-          ].map((btn) => (
-            <button
-              key={btn.screen}
-              onMouseEnter={playHoverSound}
-              onClick={() => { playClickSound(); console.log('Ir a:', btn.screen); }}
-              className={`w-full py-4 ${btn.bg} border-2 ${btn.border} text-white font-black text-xl uppercase tracking-widest rounded-sm transition-transform duration-200 hover:scale-105 active:scale-95`}
-            >
-              {btn.label}
-            </button>
-          ))}
+{/* Botones de modo */}
+<div className="flex flex-col gap-4 w-full max-w-md mb-8">
+  {[
+    { label: 'Modo Cascada', bg: 'bg-blue-500',   border: 'border-blue-400', screen: 'cascada' },
+    { label: 'Modo Scrum',   bg: 'bg-green-500',  border: 'border-green-400', screen: 'scrum' },
+    { label: 'Modo Kanban',  bg: 'bg-purple-500', border: 'border-purple-400', screen: 'kanban' },
+  ].map((btn) => (
+    <button
+      key={btn.screen}
+      onMouseEnter={playHoverSound}
+      onClick={() => goToScreen(btn.screen)}
+      className={`w-full py-4 ${btn.bg} border-2 ${btn.border} text-white font-black text-xl uppercase tracking-widest rounded-sm transition-transform duration-200 hover:scale-105 active:scale-95`}
+    >
+      {btn.label}
+    </button>
+  ))}
 
-            {/* Botón Manual - estilo diferente (secundario) */}
-          <button
-            onMouseEnter={playHoverSound}
-            onClick={() => goToScreen('manual')}
-            className="w-full py-3 bg-transparent border border-white/30 text-slate-400 font-bold text-sm uppercase tracking-widest rounded-sm transition-transform duration-200 hover:border-white/60 hover:text-white hover:scale-105 active:scale-95"
-          >
-            Manual del Empleado
-          </button>
-          </div>
+  {/* Botón Manual */}
+  <button
+    onMouseEnter={playHoverSound}
+    onClick={() => goToScreen('manual')}
+    className="w-full py-3 bg-transparent border border-white/30 text-slate-400 font-bold text-sm uppercase tracking-widest rounded-sm transition-transform duration-200 hover:border-white/60 hover:text-white hover:scale-105 active:scale-95"
+  >
+    Manual del Empleado
+  </button>
+</div>
 
-          {/* Botón volver */}
-          <button
-            onMouseEnter={playHoverSound}
-            onClick={() => goToScreen('intro')}
-            className="text-slate-500 text-xs uppercase tracking-widest hover:text-slate-300 transition-colors mt-2"
-          >
-            ← Volver al inicio
-          </button>
+{/* Botón volver */}
+<button
+  onMouseEnter={playHoverSound}
+  onClick={() => goToScreen('intro')}
+  className="text-slate-500 text-xs uppercase tracking-widest hover:text-slate-300 transition-colors mt-2"
+>
+  ← Volver al inicio
+</button>
 
         </div>
       )}
@@ -189,6 +190,15 @@ function App() {
       {currentScreen === 'manual' && (
   <ManualEmpleado
     goToScreen={goToScreen}
+    playClickSound={playClickSound}
+    playHoverSound={playHoverSound}
+  />
+)}
+
+{currentScreen === 'cascada' && (
+  <SeleccionCascada
+    goToScreen={goToScreen}
+    mainAudioRef={audioRef}
     playClickSound={playClickSound}
     playHoverSound={playHoverSound}
   />
